@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peace - Para kay Maee</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: radial-gradient(circle at center, #181226 0%, #0b0b0f 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            overflow: hidden;
+        }
+        .header {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 10px;
+        }
+        
+        /* Welcome Screen */
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 25px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .apology-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .click-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 35px;
+            border-radius: 40px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .click-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.08);
+            box-shadow: 0 15px 40px rgba(255, 117, 140, 0.3);
+        }
+
+        /* Lyrics Screen with Bubble Design & Pop-up Animation */
+        .main-content {
+            flex: 1;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            max-width: 650px;
+            position: relative;
+            width: 100%;
+        }
+        .chorus-line {
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1.4;
+            opacity: 0;
+            transform: scale(0.7) translateY(25px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy pop effect */
+            position: absolute;
+            width: 88%;
+            padding: 22px 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 26px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Active Bubble Pop-up & Glowing Gradient Colors */
+        .chorus-line.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            background: linear-gradient(135deg, rgba(255, 117, 140, 0.18) 0%, rgba(121, 40, 202, 0.22) 100%);
+            border: 1px solid rgba(255, 117, 140, 0.45);
+            box-shadow: 0 15px 45px rgba(255, 117, 140, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .footer {
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .status {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">PAMBAWI LANGG</div>
+    
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="apology-text">Sorry na, Maee</div>
+        <button class="click-btn" id="clickItBtn">Click it ✨</button>
+    </div>
+
+    <!-- Lyrics Screen -->
+    <div class="main-content" id="mainContent">
+        <div class="chorus-line" id="line-0">And the light disappears</div>
+        <div class="chorus-line" id="line-1">You'll be safe here</div>
+        <div class="chorus-line" id="line-2">When nobody is here screaming</div>
+        <div class="chorus-line" id="line-3">I'll scream with you</div>
+    </div>
+
+    <div class="footer">
+        <div class="status" id="audioStatus">You'll be Safe Here - Adie</div>
+    </div>
+
+    <audio id="audioPlayer" src="song.mp3" loop></audio>
+
+    <script>
+        const clickItBtn = document.getElementById('clickItBtn');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const mainContent = document.getElementById('mainContent');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const lines = document.querySelectorAll('.chorus-line');
+
+        clickItBtn.addEventListener('click', () => {
+            audioPlayer.play().then(() => {
+                welcomeScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+            }).catch(e => {
+                alert("Tiyaking na-upload ang song.mp3 file sa GitHub repository.");
+            });
+        });
+
+        // Naka-sync sa oras ng kanta para sa swaktong pag-pop up ng bubble at kulay
+        audioPlayer.addEventListener('timeupdate', () => {
+            const currentTime = audioPlayer.currentTime;
+            
+            let activeIndex = 0;
+            if (currentTime >= 19.5) {
+                activeIndex = 3;
+            } else if (currentTime >= 13.0) {
+                activeIndex = 2;
+            } else if (currentTime >= 6.5) {
+                activeIndex = 1;
+            } else {
+                activeIndex = 0;
+            }
+
+            lines.forEach((line, index) => {
+                if (index === activeIndex) {
+                    line.classList.add('active');
+                } else {
+                    line.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
